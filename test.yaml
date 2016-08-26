@@ -1,0 +1,88 @@
+swagger: '2.0'
+info:
+  title: Тестовое API сервиса КИТ.КАССА
+  description: Увеличьте средний чек за счет использования сервиса персональных рекомендаций КИТ.КАССА.
+  version: '0.0.1'
+host: api.kassa.mintwhale.ru
+schemes:
+  - https
+basePath: /test
+produces:
+  - application/json
+  - text/plain
+paths:
+  /recommendations:
+    get:
+      summary: Получить рекомендации.
+      description: |
+        Выдает персональные рекомендации на основании списка товаров.
+        Рекомендации отсортированы в порядке убывания вероятности.
+      parameters:
+        - $ref: '#/parameters/ApiKey'
+        - name: products
+          in: query
+          description: Список товаров.
+          required: true
+          type: array
+          # TODO: Избежать дублирования
+          items:
+            type: integer
+            format: int64
+            minimum: 0
+          collectionFormat: csv
+          minItems: 1
+          maxItems: 100
+      responses:
+        200:
+          description: Рекомендованные товары.
+          schema:
+            $ref: '#/definitions/ProductsList'
+  /sales:
+    post:
+      summary: Сохранить историю продаж.
+      description: |
+        Позволяет накапливать историю продаж для дальнейшего автоматического улучшения качества рекомендаций.
+      parameters:
+        - $ref: '#/parameters/ApiKey'
+        - name: sales
+          in: body
+          description: История продаж.
+          required: true
+          schema:
+            type: array
+            items:
+              type: object
+              required:
+                - id
+                - products
+              properties:
+                id:
+                  type: integer
+                  description: Уникальный идентификатор чека.
+                  format: int64
+                  minimum: 0
+                # TODO: Не допускать пустые чеки
+                products:
+                  $ref: '#/definitions/ProductsList'
+      responses:
+        200:
+          description: История сохранена.
+parameters:
+  ApiKey:
+    name: key
+    in: query
+    description: Ключ API.
+    required: true
+    type: string
+    pattern: '^[a-zA-Z0-9]{64}$'
+definitions:
+  Product:
+    type: integer
+    description: Уникальный идентификатор товара.
+    format: int64
+    minimum: 0
+  ProductsList:
+    type: array
+    description: Список товаров.
+    items:
+      $ref: '#/definitions/Product'
