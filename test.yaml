@@ -5,11 +5,11 @@ info:
   version: '0.0.1'
 host: api.kassa.mintwhale.ru
 schemes:
-  - https
+  - http
 basePath: /test
 produces:
   - application/json
-  - text/plain
+
 paths:
   /recommendations:
     get:
@@ -17,6 +17,7 @@ paths:
       description: |
         Выдает персональные рекомендации на основании списка товаров.
         Рекомендации отсортированы в порядке убывания вероятности.
+      operationId: app.get_recommendations
       parameters:
         - $ref: '#/parameters/ApiKey'
         - name: products
@@ -26,9 +27,8 @@ paths:
           type: array
           # TODO: Избежать дублирования
           items:
-            type: integer
-            format: int64
-            minimum: 0
+            type: string
+            pattern: '^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$'
           collectionFormat: csv
           minItems: 1
           maxItems: 100
@@ -37,11 +37,13 @@ paths:
           description: Рекомендованные товары.
           schema:
             $ref: '#/definitions/ProductsList'
+
   /sales:
     post:
       summary: Сохранить историю продаж.
       description: |
         Позволяет накапливать историю продаж для дальнейшего автоматического улучшения качества рекомендаций.
+      operationId: app.post_sales
       parameters:
         - $ref: '#/parameters/ApiKey'
         - name: sales
@@ -50,6 +52,7 @@ paths:
           required: true
           schema:
             type: array
+            # TODO: Определить минимальную и максимальную длину истории
             items:
               type: object
               required:
@@ -57,30 +60,30 @@ paths:
                 - products
               properties:
                 id:
-                  type: integer
                   description: Уникальный идентификатор чека.
-                  format: int64
-                  minimum: 0
+                  type: string
+                  pattern: '^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$'
                 # TODO: Не допускать пустые чеки
                 products:
                   $ref: '#/definitions/ProductsList'
       responses:
         200:
           description: История сохранена.
+
 parameters:
   ApiKey:
-    name: key
+    name: api_key
     in: query
     description: Ключ API.
     required: true
     type: string
     pattern: '^[a-zA-Z0-9]{64}$'
+
 definitions:
   Product:
-    type: integer
     description: Уникальный идентификатор товара.
-    format: int64
-    minimum: 0
+    type: string
+    pattern: '^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$'
   ProductsList:
     type: array
     description: Список товаров.
