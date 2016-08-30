@@ -2,7 +2,7 @@ swagger: '2.0'
 info:
   title: Тестовое API сервиса КИТ.КАССА
   description: Увеличьте средний чек за счет использования сервиса персональных рекомендаций КИТ.КАССА.
-  version: '0.0.1'
+  version: '0.0.2'
 host: api.kassa.mintwhale.ru
 schemes:
   - http
@@ -19,7 +19,6 @@ paths:
         Рекомендации отсортированы в порядке убывания вероятности.
       operationId: app.get_recommendations
       parameters:
-        - $ref: '#/parameters/ApiKey'
         - name: products
           in: query
           description: Список товаров.
@@ -45,7 +44,6 @@ paths:
         Позволяет накапливать историю продаж для дальнейшего автоматического улучшения качества рекомендаций.
       operationId: app.post_sales
       parameters:
-        - $ref: '#/parameters/ApiKey'
         - name: sales
           in: body
           description: История продаж.
@@ -70,15 +68,6 @@ paths:
         200:
           description: История сохранена.
 
-parameters:
-  ApiKey:
-    name: api_key
-    in: query
-    description: Ключ API.
-    required: true
-    type: string
-    pattern: '^[a-zA-Z0-9]{64}$'
-
 definitions:
   Product:
     description: Уникальный идентификатор товара.
@@ -89,3 +78,13 @@ definitions:
     description: Список товаров.
     items:
       $ref: '#/definitions/Product'
+
+securityDefinitions:
+  api_key:
+    description: Авторизация по ключу API.
+    type: apiKey
+    name: Api-Key
+    in: header
+
+security:
+  - api_key: []
