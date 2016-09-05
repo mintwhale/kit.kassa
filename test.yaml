@@ -2,7 +2,7 @@ swagger: '2.0'
 info:
   title: Тестовое API сервиса КИТ.КАССА
   description: Увеличьте средний чек за счет использования сервиса персональных рекомендаций КИТ.КАССА.
-  version: '0.0.3'
+  version: '0.0.4'
 host: api.kassa.mintwhale.ru
 schemes:
   - http
@@ -61,12 +61,17 @@ paths:
               type: object
               required:
                 - id
+                - date-time
                 - products
               properties:
                 id:
                   description: Уникальный идентификатор чека.
                   type: string
                   pattern: '^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$'
+                date-time:
+                  description: Дата и время в формате RFC3339.
+                  type: string
+                  format: dateTime
                 products:
                   $ref: '#/definitions/ProductsList'
       responses:
