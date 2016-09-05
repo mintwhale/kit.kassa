@@ -37,7 +37,7 @@ paths:
               id:
                 description: Уникальный идентификатор рекомендации.
                 type: string
-                pattern: '^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$'
+                pattern: '^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$'
               products:
                 $ref: '#/definitions/ProductsList'
 
@@ -66,7 +66,7 @@ paths:
                 id:
                   description: Уникальный идентификатор чека.
                   type: string
-                  pattern: '^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$'
+                  pattern: '^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$'
                 products:
                   $ref: '#/definitions/ProductsList'
       responses:
@@ -77,7 +77,7 @@ definitions:
   Product:
     description: Уникальный идентификатор товара.
     type: string
-    pattern: '^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$'
+    pattern: '^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$'
   ProductsList:
     type: array
     description: Список товаров.
