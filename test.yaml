@@ -26,7 +26,13 @@ paths:
           description: Информация о чеке.
           required: true
           schema:
-            $ref: '#/definitions/Receipt'
+            $ref: '#/definitions/ReceiptShort'
+        - name: X-Evotor-Store-Uuid
+          in: header
+          description: Уникальный идентификатор (UUID, [RFC4122]) магазина.
+          required: true
+          type: string
+          pattern: '^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$'
       responses:
         200:
           description: Рекомендованные товары.
@@ -37,7 +43,7 @@ paths:
               - recommendations
             properties:
               id:
-                description: Уникальный идентификатор (UUID, [RFC4122]) рекомендации.
+                description: Уникальный идентификатор (UUID) рекомендации.
                 type: string
                 pattern: '^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$'
               recommendations:
@@ -250,7 +256,7 @@ definitions:
         minimum: 1
 
   Receipt:
-    description: Информация о чеке.
+    description: Детальная информация о чеке.
     type: object
     required:
       - uuid
@@ -276,11 +282,26 @@ definitions:
         type: string
         pattern: '^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$'
       dateTime:
-        description: Локальная дата и время магазина в формате [RFC3339].
-        type: string
-        format: date-time
+        $ref: '#/definitions/DateTime'
       items:
         $ref: '#/definitions/ItemsList'
+
+  ReceiptShort:
+    description: Краткая информация о чеке.
+    type: object
+    required:
+      - dateTime
+      - items
+    properties:
+      dateTime:
+        $ref: '#/definitions/DateTime'
+      items:
+        $ref: '#/definitions/ItemsList'
+
+  DateTime:
+    description: Локальная дата и время в формате [RFC3339].
+    type: string
+    format: date-time
 
   Recommendation:
     description: Рекомендованный товар (UUID).
@@ -316,7 +337,7 @@ definitions:
         description: Короткое, человекочитаемое описание ошибки.
         type: string
       status:
-        description: Код статуса HTTP ([RFC7231], серция 6), сгенерированный сервером при возникновении ошибки.
+        description: Код статуса HTTP ([RFC7231], секция 6), сгенерированный сервером при возникновении ошибки.
         type: integer
         format: int32
         minimum: 100
