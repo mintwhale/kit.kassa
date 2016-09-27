@@ -2,7 +2,7 @@ swagger: '2.0'
 info:
   title: Тестовое API сервиса КИТ.КАССА
   description: Увеличьте средний чек за счет использования сервиса персональных рекомендаций КИТ.КАССА.
-  version: '0.3.2'
+  version: '0.5.0'
 host: api.kassa.mintwhale.ru
 schemes:
   - http
@@ -84,6 +84,102 @@ paths:
         default:
           $ref: '#/responses/Unexpected'
 
+  /user/create:
+    post:
+      summary: Создать нового пользователя.
+      description: |
+        Регистрирует нового пользователя и возвращает его ключ API. Операция доступна только администраторам.
+      operationId: app.create_user
+      produces:
+        - application/json
+        - text/plain
+      parameters:
+        - name: user
+          in: body
+          description: Данные пользователя.
+          required: true
+          schema:
+            type: object
+            required:
+              - userUuid
+              - email
+            properties:
+              userUuid:
+                $ref: '#/definitions/UserUuid'
+              email:
+                description: Адрес электронной почты пользователя.
+                type: string
+                pattern: '^[a-zA-Z0-9._%+-]+@(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$'
+                maxLength: 254
+      responses:
+        200:
+          description: Пользователь зарегистрирован.
+          schema:
+            type: object
+            required:
+              - userUuid
+              - token
+            properties:
+              userUuid:
+                $ref: '#/definitions/UserUuid'
+              token:
+                $ref: '#/definitions/Token'
+        400:
+          $ref: '#/responses/BadRequest'
+        401:
+          $ref: '#/responses/Unauthorized'
+        403:
+          $ref: '#/responses/Forbidden'
+        default:
+          $ref: '#/responses/Unexpected'
+
+  /user/verify:
+    post:
+      summary: Верифицировать пользователя.
+      description: |
+        Проверяет существование пользователя и возвращает его ключ API. Операция доступна только администраторам.
+      operationId: app.verify_user
+      produces:
+        - application/json
+        - text/plain
+      parameters:
+        - name: user
+          in: body
+          description: Данные пользователя.
+          required: true
+          schema:
+            type: object
+            required:
+              - userUuid
+            properties:
+              userUuid:
+                $ref: '#/definitions/UserUuid'
+      responses:
+        200:
+          description: Пользователь существует.
+          schema:
+            type: object
+            required:
+              - userUuid
+              - token
+              - hasBilling
+            properties:
+              userUuid:
+                $ref: '#/definitions/UserUuid'
+              token:
+                $ref: '#/definitions/Token'
+              hasBilling:
+                description: Активен ли аккаунт пользователя.
+                type: boolean
+        400:
+          $ref: '#/responses/BadRequest'
+        401:
+          $ref: '#/responses/Unauthorized'
+        403:
+          $ref: '#/responses/Forbidden'
+        default:
+          $ref: '#/responses/Unexpected'
+
 responses:
   BadRequest:
     description: Ошибка в запросе.
@@ -106,6 +202,16 @@ responses:
       $ref: '#/definitions/Error'
 
 definitions:
+  UserUuid:
+    description: Уникальный идентификатор (UUID) пользователя.
+    type: string
+    pattern: '^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$'
+
+  Token:
+    description: Ключ API.
+    type: string
+    pattern: '^[a-zA-Z0-9]{64}$'
+
   Item:
     description: Информация о товаре.
     type: object
@@ -121,17 +227,22 @@ definitions:
         type: string
         pattern: '^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$'
       name:
-        # TODO: Определить максимальную длину
         description: Наименование товара.
         type: string
+        maxLength: 1024
       itemType:
-        # TODO: Определить допустимые варианты или максимальную длину
         description: Тип товара.
         type: string
+        enum:
+          - NORMAL
+          - ALCOHOL_MARKED
+          - ALCOHOL_NOT_MARKED
+          - SERVICE
       barcode:
         # TODO: Определить формат
         description: Штриховой код товара.
         type: string
+        maxLength: 1024
       quantity:
         description: Количество товара.
         type: integer
