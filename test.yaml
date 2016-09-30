@@ -247,7 +247,7 @@ definitions:
       barcode:
         # TODO: Определить формат
         description: Штриховой код товара.
-        type: string
+        type: [string, "null"]
         maxLength: 1024
       quantity:
         description: Количество товара.
