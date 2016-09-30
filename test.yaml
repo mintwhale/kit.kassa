@@ -251,9 +251,10 @@ definitions:
         maxLength: 1024
       quantity:
         description: Количество товара.
-        type: integer
-        format: int32
-        minimum: 1
+        type: number
+        format: float
+        minimum: 0
+        exclusiveMinimum: true
 
   Receipt:
     description: Детальная информация о чеке.
