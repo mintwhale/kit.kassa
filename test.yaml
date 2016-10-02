@@ -2,10 +2,10 @@ swagger: '2.0'
 info:
   title: Тестовое API сервиса КИТ.КАССА
   description: Увеличьте средний чек за счет использования сервиса персональных рекомендаций КИТ.КАССА.
-  version: '0.5.0'
+  version: '0.5.1'
 host: api.kassa.mintwhale.ru
 schemes:
-  - http
+  - https
 basePath: /test
 produces:
   - application/json
