@@ -2,7 +2,7 @@ swagger: '2.0'
 info:
   title: Тестовое API сервиса КИТ.КАССА
   description: Увеличьте средний чек за счет использования сервиса персональных рекомендаций КИТ.КАССА.
-  version: '0.5.1'
+  version: '0.5.2'
 host: api.kassa.mintwhale.ru
 schemes:
   - https
@@ -263,6 +263,7 @@ definitions:
       - uuid
       - deviceUuid
       - storeUuid
+      - clientUuid
       - dateTime
       - items
     properties:
@@ -280,7 +281,7 @@ definitions:
         pattern: '^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$'
       clientUuid:
         description: Уникальный идентификатор (UUID) клиента.
-        type: string
+        type: [string, "null"]
         pattern: '^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$'
       dateTime:
         $ref: '#/definitions/DateTime'
