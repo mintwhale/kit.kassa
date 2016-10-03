@@ -282,7 +282,9 @@ definitions:
       clientUuid:
         description: Уникальный идентификатор (UUID) клиента.
         type: [string, "null"]
-        pattern: '^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$'
+        maxLength: 1024
+        # TODO: Вернуть валидацию
+        # pattern: '^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$'
       dateTime:
         $ref: '#/definitions/DateTime'
       items:
