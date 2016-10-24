@@ -254,9 +254,7 @@ definitions:
   UserUuid:
     description: Уникальный идентификатор (UUID) пользователя.
     type: string
-    maxLength: 64
-    # TODO: Вернуть валидацию
-    # pattern: '^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$'
+    pattern: '^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$'
 
   Token:
     description: Ключ API.
