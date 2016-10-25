@@ -96,9 +96,6 @@ paths:
       description: |
         Регистрирует нового пользователя и возвращает его ключ API. Операция доступна только администраторам.
       operationId: app.create_user
-      produces:
-        - application/json
-        - text/plain
       parameters:
         - name: user
           in: body
