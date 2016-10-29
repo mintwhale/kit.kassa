@@ -3,8 +3,9 @@ info:
   title: Тестовое API сервиса КИТ.КАССА
   description: Увеличьте средний чек за счет использования сервиса персональных рекомендаций КИТ.КАССА.
   version: '0.6.1'
-host: api.kassa.mintwhale.ru
+host: {{ facade_host ~ ":" ~ facade_port }}
 schemes:
+  - http
   - https
 basePath: /api/v1
 produces:
@@ -99,21 +100,9 @@ paths:
       parameters:
         - name: user
           in: body
-          description: Данные пользователя.
           required: true
           schema:
-            type: object
-            required:
-              - userUuid
-              - email
-            properties:
-              userUuid:
-                $ref: '#/definitions/UserUuid'
-              email:
-                description: Адрес электронной почты пользователя.
-                type: string
-                pattern: '^[a-zA-Z0-9._%+-]+@(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$'
-                maxLength: 254
+            $ref: '#/definitions/User'
       responses:
         200:
           description: Пользователь зарегистрирован.
@@ -252,6 +241,21 @@ definitions:
     description: Уникальный идентификатор (UUID) пользователя.
     type: string
     pattern: '^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$'
+
+  User:
+    description: Данные пользователя.
+    type: object
+    required:
+      - userUuid
+      - email
+    properties:
+      userUuid:
+        $ref: '#/definitions/UserUuid'
+      email:
+        description: Адрес электронной почты пользователя.
+        type: string
+        pattern: '^[a-zA-Z0-9._%+-]+@(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$'
+        maxLength: 254
 
   Token:
     description: Ключ API.
