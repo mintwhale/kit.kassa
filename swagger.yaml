@@ -131,9 +131,6 @@ paths:
       description: |
         Проверяет существование пользователя и возвращает его ключ API. Операция доступна только администраторам.
       operationId: app.verify_user
-      produces:
-        - application/json
-        - text/plain
       parameters:
         - name: user
           in: body
@@ -169,6 +166,8 @@ paths:
           $ref: '#/responses/Unauthorized'
         403:
           $ref: '#/responses/Forbidden'
+        404:
+          $ref: '#/responses/NotFound'
         default:
           $ref: '#/responses/Unexpected'
 
@@ -228,6 +227,11 @@ responses:
 
   Forbidden:
     description: Доступ запрещен.
+    schema:
+      $ref: '#/definitions/Error'
+
+  NotFound:
+    description: Документ не найден.
     schema:
       $ref: '#/definitions/Error'
 
