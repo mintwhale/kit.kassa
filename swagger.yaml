@@ -1,8 +1,8 @@
 swagger: '2.0'
 info:
-  title: Тестовое API сервиса КИТ.КАССА
+  title: API сервиса КИТ.КАССА
   description: Увеличьте средний чек за счет использования сервиса персональных рекомендаций КИТ.КАССА.
-  version: '0.6.1'
+  version: '0.6.3'
 host: {{ facade_host ~ ":" ~ facade_port }}
 schemes:
   - http
@@ -183,25 +183,9 @@ paths:
       parameters:
         - name: tariff
           in: body
-          description: Данные тарифа.
           required: true
           schema:
-            type: object
-            required:
-              - userUuid
-            properties:
-              userUuid:
-                $ref: '#/definitions/UserUuid'
-              tariffId:
-                description: Код тарифа.
-                type: string
-                maxLength: 1024
-              status:
-                description: Тип товара.
-                type: string
-                enum:
-                  - ACTIVE
-                  - INACTIVE
+            $ref: '#/definitions/Tariff'
       responses:
         200:
           description: Тариф изменен.
@@ -211,6 +195,8 @@ paths:
           $ref: '#/responses/Unauthorized'
         403:
           $ref: '#/responses/Forbidden'
+        404:
+          $ref: '#/responses/NotFound'
         default:
           $ref: '#/responses/Unexpected'
 
@@ -260,6 +246,25 @@ definitions:
         type: string
         pattern: '^[a-zA-Z0-9._%+-]+@(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$'
         maxLength: 254
+
+  Tariff:
+    description: Данные тарифа.
+    type: object
+    required:
+      - userUuid
+    properties:
+      userUuid:
+        $ref: '#/definitions/UserUuid'
+      tariffId:
+        description: Код тарифа.
+        type: string
+        maxLength: 1024
+      status:
+        description: Тип операции.
+        type: string
+        enum:
+          - ACTIVE
+          - INACTIVE
 
   Token:
     description: Ключ API.
