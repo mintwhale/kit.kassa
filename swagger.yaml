@@ -2,7 +2,7 @@ swagger: '2.0'
 info:
   title: API сервиса КИТ.КАССА
   description: Увеличьте средний чек за счет использования сервиса персональных рекомендаций КИТ.КАССА.
-  version: '0.6.3'
+  version: '0.7.0'
 host: {{ facade_host ~ ":" ~ facade_port }}
 schemes:
   - http
@@ -44,9 +44,7 @@ paths:
               - recommendations
             properties:
               id:
-                description: Уникальный идентификатор (UUID) рекомендации.
-                type: string
-                pattern: '^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$'
+                $ref: '#/definitions/RecommendationId'
               recommendations:
                 $ref: '#/definitions/RecommendationsList'
         400:
@@ -63,12 +61,12 @@ paths:
       summary: Сохранить историю продаж.
       description: |
         Позволяет накапливать историю продаж для дальнейшего автоматического улучшения качества рекомендаций.
-      operationId: app.post_sales
+      operationId: app.save_receipts
       produces:
         - application/json
         - text/plain
       parameters:
-        - name: sales
+        - name: receipts
           in: body
           description: История продаж.
           required: true
@@ -271,6 +269,56 @@ definitions:
     type: string
     pattern: '^[a-zA-Z0-9]{64}$'
 
+  Receipt:
+    description: Детальная информация о чеке.
+    type: object
+    required:
+      - uuid
+      - deviceUuid
+      - storeUuid
+      - clientUuid
+      - dateTime
+      - items
+    properties:
+      uuid:
+        description: Уникальный идентификатор (UUID) чека.
+        type: string
+        pattern: '^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$'
+      deviceUuid:
+        description: Уникальный идентификатор (UUID) терминала.
+        type: string
+        pattern: '^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$'
+      storeUuid:
+        description: Уникальный идентификатор (UUID) магазина.
+        type: string
+        pattern: '^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$'
+      clientUuid:
+        description: Уникальный идентификатор (UUID) клиента.
+        type: [string, "null"]
+        maxLength: 64
+        # TODO: Вернуть валидацию
+        # pattern: '^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$'
+      dateTime:
+        $ref: '#/definitions/DateTime'
+      items:
+        $ref: '#/definitions/ItemsList'
+      extras:
+        $ref: '#/definitions/Hits'
+
+  DateTime:
+    description: Локальная дата и время в формате [RFC3339].
+    type: string
+    format: date-time
+
+  ItemsList:
+    type: array
+    description: Список товаров.
+    items:
+      $ref: '#/definitions/Item'
+    minItems: 1
+    maxItems: 100
+    uniqueItems: true
+
   Item:
     description: Информация о товаре.
     type: object
@@ -309,39 +357,17 @@ definitions:
         minimum: 0
         exclusiveMinimum: true
 
-  Receipt:
-    description: Детальная информация о чеке.
+  Hits:
+    description: Продажи по рекомендации.
     type: object
     required:
-      - uuid
-      - deviceUuid
-      - storeUuid
-      - clientUuid
-      - dateTime
+      - recommendationUuid
       - items
     properties:
-      uuid:
-        description: Уникальный идентификатор (UUID) чека.
-        type: string
-        pattern: '^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$'
-      deviceUuid:
-        description: Уникальный идентификатор (UUID) терминала.
-        type: string
-        pattern: '^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$'
-      storeUuid:
-        description: Уникальный идентификатор (UUID) магазина.
-        type: string
-        pattern: '^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$'
-      clientUuid:
-        description: Уникальный идентификатор (UUID) клиента.
-        type: [string, "null"]
-        maxLength: 64
-        # TODO: Вернуть валидацию
-        # pattern: '^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$'
-      dateTime:
-        $ref: '#/definitions/DateTime'
+      recommendationUuid:
+        $ref: '#/definitions/RecommendationId'
       items:
-        $ref: '#/definitions/ItemsList'
+        $ref: '#/definitions/RecommendationsList'
 
   ReceiptShort:
     description: Краткая информация о чеке.
@@ -355,24 +381,10 @@ definitions:
       items:
         $ref: '#/definitions/ItemsList'
 
-  DateTime:
-    description: Локальная дата и время в формате [RFC3339].
-    type: string
-    format: date-time
-
   Recommendation:
     description: Рекомендованный товар (UUID).
     type: string
     pattern: '^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$'
-
-  ItemsList:
-    type: array
-    description: Список товаров.
-    items:
-      $ref: '#/definitions/Item'
-    minItems: 1
-    maxItems: 100
-    uniqueItems: true
 
   RecommendationsList:
     type: array
@@ -382,6 +394,11 @@ definitions:
     minItems: 0
     maxItems: 100
     uniqueItems: true
+
+  RecommendationId:
+    description: Уникальный идентификатор (UUID) рекомендации.
+    type: string
+    pattern: '^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$'
 
   Error:
     description: Ошибка.
