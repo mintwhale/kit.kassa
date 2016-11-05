@@ -276,7 +276,6 @@ definitions:
       - uuid
       - deviceUuid
       - storeUuid
-      - clientUuid
       - dateTime
       - items
     properties:
@@ -292,12 +291,11 @@ definitions:
         description: Уникальный идентификатор (UUID) магазина.
         type: string
         pattern: '^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$'
+      # TODO: Определить формат
       clientUuid:
         description: Уникальный идентификатор (UUID) клиента.
         type: [string, "null"]
         maxLength: 64
-        # TODO: Вернуть валидацию
-        # pattern: '^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$'
       dateTime:
         $ref: '#/definitions/DateTime'
       items:
@@ -326,7 +324,6 @@ definitions:
       - uuid
       - name
       - itemType
-      - barcode
       - quantity
     properties:
       uuid:
