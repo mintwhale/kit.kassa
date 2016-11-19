@@ -20,7 +20,7 @@ paths:
       description: |
         Выдает персональные рекомендации на основании списка товаров.
         Рекомендации отсортированы в порядке убывания вероятности.
-      operationId: app.post_recommendations
+      operationId: facade.app.post_recommendations
       parameters:
         - name: receipt
           in: body
@@ -61,7 +61,7 @@ paths:
       summary: Сохранить историю продаж.
       description: |
         Позволяет накапливать историю продаж для дальнейшего автоматического улучшения качества рекомендаций.
-      operationId: app.save_receipts
+      operationId: facade.app.save_receipts
       produces:
         - application/json
         - text/plain
@@ -94,7 +94,7 @@ paths:
       summary: Создать нового пользователя.
       description: |
         Регистрирует нового пользователя и возвращает его ключ API. Операция доступна только администраторам.
-      operationId: app.create_user
+      operationId: facade.app.create_user
       parameters:
         - name: user
           in: body
@@ -128,7 +128,7 @@ paths:
       summary: Верифицировать пользователя.
       description: |
         Проверяет существование пользователя и возвращает его ключ API. Операция доступна только администраторам.
-      operationId: app.verify_user
+      operationId: facade.app.verify_user
       parameters:
         - name: user
           in: body
@@ -174,7 +174,7 @@ paths:
       summary: Управление тарифом пользователя.
       description: |
         Позволяет активировать/деактивировать тариф пользователя. Операция доступна только администраторам.
-      operationId: app.tariff_user
+      operationId: facade.app.tariff_user
       produces:
         - application/json
         - text/plain
