@@ -2,7 +2,7 @@ swagger: '2.0'
 info:
   title: API сервиса КИТ.КАССА
   description: Увеличьте средний чек за счет использования сервиса персональных рекомендаций КИТ.КАССА.
-  version: '0.7.0'
+  version: '0.7.1'
 host: {{ facade_host ~ ":" ~ facade_port }}
 schemes:
   - http
@@ -228,7 +228,7 @@ definitions:
   UserUuid:
     description: Уникальный идентификатор (UUID) пользователя.
     type: string
-    pattern: '^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$'
+    pattern: '^[0-9]{2}-[0-9]{15}$'
 
   User:
     description: Данные пользователя.
