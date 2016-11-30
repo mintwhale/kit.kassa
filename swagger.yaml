@@ -357,9 +357,6 @@ definitions:
   Hits:
     description: Продажи по рекомендации.
     type: object
-    required:
-      - recommendationUuid
-      - items
     properties:
       recommendationUuid:
         $ref: '#/definitions/RecommendationId'
