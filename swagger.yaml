@@ -197,6 +197,17 @@ paths:
           $ref: '#/responses/NotFound'
         default:
           $ref: '#/responses/Unexpected'
+  /status:
+    get:
+      summary: Статус сервиса.
+      description: |
+        Статус сервиса.
+      operationId: facade.app.status
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Ok.
 
 responses:
   BadRequest:
