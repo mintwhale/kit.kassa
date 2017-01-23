@@ -247,6 +247,7 @@ definitions:
     required:
       - userUuid
       - email
+      - token
     properties:
       userUuid:
         $ref: '#/definitions/UserUuid'
@@ -254,6 +255,10 @@ definitions:
         description: Адрес электронной почты пользователя.
         type: string
         pattern: '^[a-zA-Z0-9._%+-]+@(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$'
+        maxLength: 254
+      token:
+        description: Токен
+        type: string
         maxLength: 254
 
   Tariff:
