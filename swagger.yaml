@@ -123,6 +123,41 @@ paths:
         default:
           $ref: '#/responses/Unexpected'
 
+  /user/token:
+    post:
+      summary: Токен для доступа к данным.
+      description: |
+        Добавляет токен пользователя для доступа к данным. Операция доступна только администраторам.
+      operationId: facade.app.add_service_token
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            description: Токен пользователя.
+            type: object
+            required:
+              - userUuid
+              - token
+            properties:
+              userUuid:
+                $ref: '#/definitions/UserUuid'
+              token:
+                description: Токен пользователя для доступа к сервисы данных.
+                type: string
+                maxLength: 254
+      responses:
+        200:
+          description: Токен добавлен.
+        400:
+          $ref: '#/responses/BadRequest'
+        401:
+          $ref: '#/responses/Unauthorized'
+        404:
+          $ref: '#/responses/NotFound'
+        default:
+          $ref: '#/responses/Unexpected'
+
   /user/verify:
     post:
       summary: Верифицировать пользователя.
