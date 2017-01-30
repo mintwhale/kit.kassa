@@ -361,7 +361,6 @@ definitions:
       $ref: '#/definitions/Item'
     minItems: 1
     maxItems: 100
-    uniqueItems: true
 
   Item:
     description: Информация о товаре.
@@ -424,7 +423,6 @@ definitions:
   Recommendation:
     description: Рекомендованный товар (UUID).
     type: string
-    pattern: '^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$'
 
   RecommendationsList:
     type: array
