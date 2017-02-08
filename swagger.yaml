@@ -328,7 +328,7 @@ definitions:
       uuid:
         description: Уникальный идентификатор (UUID) чека.
         type: string
-        pattern: '^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$'
+        maxLength: 64
       deviceUuid:
         description: Уникальный идентификатор (UUID) терминала.
         type: string
@@ -374,7 +374,7 @@ definitions:
       uuid:
         description: Уникальный идентификатор (UUID) товара.
         type: string
-        maxLength: 128
+        maxLength: 64
       name:
         description: Наименование товара.
         type: string
